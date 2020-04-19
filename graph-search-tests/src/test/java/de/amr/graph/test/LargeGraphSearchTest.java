@@ -19,11 +19,16 @@ import de.amr.graph.grid.impl.GridGraph;
 import de.amr.graph.pathfinder.api.GraphSearch;
 import de.amr.graph.pathfinder.api.Path;
 import de.amr.graph.pathfinder.impl.AStarSearch;
+import de.amr.graph.pathfinder.impl.BestFirstSearch;
+import de.amr.graph.pathfinder.impl.BreadthFirstSearch;
+import de.amr.graph.pathfinder.impl.DepthFirstSearch;
+import de.amr.graph.pathfinder.impl.HillClimbingSearch;
 import de.amr.maze.alg.ust.WilsonUSTRandomCell;
 
 public class LargeGraphSearchTest {
 
 	GridGraph2D<TraversalState, Integer> graph;
+	int source, target;
 
 	GridGraph2D<TraversalState, Integer> randomDenseGrid(int c, int r, GridTopology gridTopology) {
 		GridGraph2D<TraversalState, Integer> g = new GridGraph<TraversalState, Integer>(c, r, gridTopology,
@@ -46,17 +51,30 @@ public class LargeGraphSearchTest {
 	@Before
 	public void createFixture() {
 		graph = randomDenseGrid(100, 1000, Grid8Topology.get());
+		System.out.println(String.format("Graph has %,d vertices and %,d edges", graph.numVertices(), graph.numEdges()));
+		source = 0;
+		target = graph.numVertices() - 1;
+	}
+
+	void testLargeGraph(GraphSearch search) {
+		System.out.println("Path finder: " + search.getClass());
+		long time = System.nanoTime();
+		Path path = search.findPath(source, target);
+		time = System.nanoTime() - time;
+		assertTrue("Path is not empty", path.numEdges() > 0);
+		assertTrue("Path starts with source ", path.source() == source);
+		assertTrue("Path ends with target ", path.target() == target);
+		System.out.println("Path length is " + path.numEdges());
+		System.out.println(String.format("Search time: %d milliseconds", time / 1_000_000));
+		System.out.println();
 	}
 
 	@Test
-	public void testLargeGraphSearch() {
-		GraphSearch search = new AStarSearch(graph, (u, v) -> 1, graph::euclidean);
-		System.out.println(String.format("Graph has %,d vertices and %,d edges", graph.numVertices(), graph.numEdges()));
-		long time = System.nanoTime();
-		Path path = search.findPath(0, graph.numVertices() - 1);
-		time = System.nanoTime() - time;
-		assertTrue("Path is not empty", path.numEdges() > 0);
-		System.out.println("Path length is " + path.numEdges());
-		System.out.println(String.format("Search time: %d milliseconds", time / 1_000_000));
+	public void testLargeGraph() {
+		testLargeGraph(new BreadthFirstSearch(graph));
+		testLargeGraph(new DepthFirstSearch(graph));
+		testLargeGraph(new AStarSearch(graph, (u, v) -> 1, graph::euclidean));
+		testLargeGraph(new BestFirstSearch(graph, v -> graph.manhattan(v, target)));
+		testLargeGraph(new HillClimbingSearch(graph, v -> graph.manhattan(v, target)));
 	}
 }
