@@ -30,13 +30,13 @@ public class LargeGraphSearchTest {
 	GridGraph2D<TraversalState, Integer> graph;
 	int source, target;
 
-	GridGraph2D<TraversalState, Integer> randomDenseGrid(int c, int r, GridTopology gridTopology) {
+	GridGraph2D<TraversalState, Integer> randomGrid(int c, int r, GridTopology gridTopology) {
 		GridGraph2D<TraversalState, Integer> g = new GridGraph<TraversalState, Integer>(c, r, gridTopology,
 				v -> TraversalState.UNVISITED, (u, v) -> 0, UndirectedEdge::new);
 		new WilsonUSTRandomCell(g).createMaze(0, 0);
 		int numFullGridEdges = gridTopology == Grid4Topology.get() ? 2 * c * r - c - r : 4 * c * r - 3 * c - 3 * r + 2;
 		int maxEdgesToAdd = numFullGridEdges - g.numEdges();
-		int numEdgesToAdd = maxEdgesToAdd * 50 / 100;
+		int numEdgesToAdd = maxEdgesToAdd * 10 / 100;
 		while (numEdgesToAdd > 0) {
 			int v = new Random().nextInt(g.numVertices());
 			Optional<Integer> unconnectedNeighbor = randomElement(g.neighbors(v).filter(w -> !g.adjacent(v, w)));
@@ -50,8 +50,9 @@ public class LargeGraphSearchTest {
 
 	@Before
 	public void createFixture() {
-		graph = randomDenseGrid(100, 1000, Grid8Topology.get());
+		graph = randomGrid(500, 1000, Grid8Topology.get());
 		System.out.println(String.format("Graph has %,d vertices and %,d edges", graph.numVertices(), graph.numEdges()));
+		System.out.println();
 		source = 0;
 		target = graph.numVertices() - 1;
 	}
