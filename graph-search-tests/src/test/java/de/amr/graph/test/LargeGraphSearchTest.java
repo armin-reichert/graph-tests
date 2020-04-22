@@ -75,7 +75,7 @@ public class LargeGraphSearchTest {
 		testLargeGraph(new BreadthFirstSearch(graph));
 		testLargeGraph(new DepthFirstSearch(graph));
 		testLargeGraph(new AStarSearch(graph, (u, v) -> 1, graph::euclidean));
-		testLargeGraph(new BestFirstSearch(graph, v -> graph.manhattan(v, target)));
-		testLargeGraph(new HillClimbingSearch(graph, v -> graph.manhattan(v, target)));
+		testLargeGraph(new BestFirstSearch(graph, v -> graph.euclidean(v, target)));
+		testLargeGraph(new HillClimbingSearch(graph, v -> graph.euclidean(v, target)));
 	}
 }
