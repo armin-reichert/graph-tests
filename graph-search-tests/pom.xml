@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.amr.graph.tests</groupId>
   <artifactId>graph-search-tests</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0</version>
   <name>graph-search-tests</name>
   <description>Graph search tests</description>
   	<build>
@@ -22,17 +22,17 @@
   		<dependency>
   			<groupId>de.amr.graph</groupId>
   			<artifactId>graph-core</artifactId>
-  			<version>0.0.1-SNAPSHOT</version>
+  			<version>1.0</version>
   		</dependency>
   		<dependency>
   			<groupId>de.amr.graph</groupId>
   			<artifactId>graph-grid</artifactId>
-  			<version>0.0.1-SNAPSHOT</version>
+  			<version>1.0</version>
   		</dependency>
   		<dependency>
   			<groupId>de.amr.maze</groupId>
   			<artifactId>mazes-algorithms</artifactId>
-  			<version>0.0.1-SNAPSHOT</version>
+  			<version>1.0</version>
   		</dependency>
   		<dependency>
   			<groupId>junit</groupId>
