@@ -1,8 +1,5 @@
 package de.amr.graph.test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.junit.Assert;
@@ -10,36 +7,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.amr.graph.core.impl.UGraph;
-import de.amr.graph.pathfinder.api.GraphSearchObserver;
 import de.amr.graph.pathfinder.impl.DepthFirstSearch;
 
 public class LabeledGraphTest {
 
-	private class DFSTracer implements GraphSearchObserver {
-
-		private final UGraph<String, Integer> graph;
-		private final List<Integer> trace = new ArrayList<>();
-
-		public DFSTracer(UGraph<String, Integer> graph) {
-			this.graph = graph;
-		}
-
-		@Override
-		public void vertexAddedToFrontier(int vertex) {
-			trace.add(vertex);
-		}
-
-		public String getVertexTrace() {
-			return trace.stream().map(String::valueOf).collect(Collectors.joining());
-		}
-
-		public String getVertexLabelTrace() {
-			return trace.stream().map(graph::get).collect(Collectors.joining());
-		}
-
-	};
-
-	private UGraph<String, Integer> g;
+	private UGraph<String, Integer> graph;
 
 	private UGraph<String, Integer> createSampleGraph() {
 		UGraph<String, Integer> g = new UGraph<>();
@@ -66,28 +38,28 @@ public class LabeledGraphTest {
 
 	@Before
 	public void setUp() {
-		g = new UGraph<>();
+		graph = new UGraph<>();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testSetLabelOnNonexistingVertex() {
-		g.set(0, "A");
+		graph.set(0, "A");
 	}
 
 	@Test
 	public void testSetLabel() {
-		g.addVertex(0);
-		g.set(0, "A");
-		Assert.assertEquals("A", g.get(0));
+		graph.addVertex(0);
+		graph.set(0, "A");
+		Assert.assertEquals("A", graph.get(0));
 	}
 
 	@Test
 	public void testDefaultVertexLabel() {
-		g.setDefaultVertexLabel(v -> "42");
-		g.addVertex(0);
-		Assert.assertEquals("42", g.get(0));
-		g.set(0, "43");
-		Assert.assertNotEquals("42", g.get(0));
+		graph.setDefaultVertexLabel(v -> "42");
+		graph.addVertex(0);
+		Assert.assertEquals("42", graph.get(0));
+		graph.set(0, "43");
+		Assert.assertNotEquals("42", graph.get(0));
 	}
 
 	@Test
